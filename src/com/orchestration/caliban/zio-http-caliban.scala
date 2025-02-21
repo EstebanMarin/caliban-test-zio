@@ -1,8 +1,4 @@
-//> using scala 3.6
-//> using dep "dev.zio::zio:2.1.15"
-//> using dep "dev.zio::zio-http:3.0.1"
-//> using dep "com.github.ghostdogpr::caliban:2.9.1"
-//> using dep "com.github.ghostdogpr::caliban-quick:2.9.1"
+package ziohttpcaliban
 
 import zio.*
 import zio.http.*
@@ -10,6 +6,8 @@ import caliban.*
 import caliban.schema.Schema.auto.*
 import caliban.schema.ArgBuilder.auto.*
 import caliban.quick.* // adds extension methods to `api`
+import zio.logging.consoleLogger
+
 
 case class User(id: Int, name: String, username: Int)
 case class Queries(
@@ -20,8 +18,8 @@ case class Queries(
 object SimpleZIO extends ZIOAppDefault {
 
   val resolver = Queries(
-    users = ZIO.succeed(List(User(1, "John", 1), User(2, "Jane", 2))),
-    userByIf = (id: Int) => ZIO.succeed(Some(User(id, "John", 1)))
+    users = ZIO.succeed(List(User(1, "John", 1), User(2, "Jane", 2), User(2, "Esteban", 2))),
+    userByIf = (id: Int) => ZIO.succeed(Some(User(id, "Esteban", 1)))
   )
 
   val api = graphQL(RootResolver(resolver))
@@ -47,10 +45,18 @@ object SimpleZIO extends ZIOAppDefault {
 
   private val configLayer = ZLayer.succeed(config)
 
-  val serverConfig = Server.Config.default
+  // val serverConfig = Server.Config.default
 
   val app = Server.serve(routes).provide(configLayer, Server.live)
 
   def run =
-    app *> ZIO.succeed(runGraphQL)
+    for {
+      _ <- Console.printLine("Hello")
+      _ <- ZIO.logInfo("❤️")
+      // httpFiber <- app
+      graphQLFiber <- ZIO.attempt(runGraphQL)
+      // _ <- graphQLFiber.join
+      // _ <- httpFiber.join
+    } yield ()
+
 }
