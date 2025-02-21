@@ -2,11 +2,34 @@
 //> using dep "dev.zio::zio:2.1.15"
 //> using dep "dev.zio::zio-http:3.0.1"
 //> using dep "com.github.ghostdogpr::caliban:2.9.1"
+//> using dep "com.github.ghostdogpr::caliban-quick:2.9.1"
 
 import zio.*
 import zio.http.*
+import caliban.*
+import caliban.schema.Schema.auto.*
+import caliban.schema.ArgBuilder.auto.*
+import caliban.quick.* // adds extension methods to `api`
+
+case class User(id: Int, name: String, username: Int)
+case class Queries(
+    users: Task[List[User]],
+    userByIf: Int => Task[Option[User]]
+)
 
 object SimpleZIO extends ZIOAppDefault {
+
+  val resolver = Queries(
+    users = ZIO.succeed(List(User(1, "John", 1), User(2, "Jane", 2))),
+    userByIf = (id: Int) => ZIO.succeed(Some(User(id, "John", 1)))
+  )
+
+  val api = graphQL(RootResolver(resolver))
+
+  val runGraphQL = api.unsafe.runServer(
+    port = 8080,
+    apiPath = "/api/graphql"
+  )
 
   val routes: Routes[Any, Response] =
     Routes(
