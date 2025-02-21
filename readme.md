@@ -1,2 +1,3 @@
+# Scala-cli to build a server and use caliban
 
-scala-cli fmt .
+to grow under the disney organization

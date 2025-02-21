@@ -28,7 +28,8 @@ object SimpleZIO extends ZIOAppDefault {
 
   val runGraphQL = api.unsafe.runServer(
     port = 8080,
-    apiPath = "/api/graphql"
+    apiPath = "/api/graphql",
+    graphiqlPath = Some("/api/graphiql")
   )
 
   val routes: Routes[Any, Response] =
@@ -47,11 +48,9 @@ object SimpleZIO extends ZIOAppDefault {
   private val configLayer = ZLayer.succeed(config)
 
   val serverConfig = Server.Config.default
-//   val app = Server.serve(routes).provide(Server.defaultWithPort(8081))
-//   val app = Server.serve(routes).provide(Server.defaultWithPort(8081))
 
   val app = Server.serve(routes).provide(configLayer, Server.live)
 
   def run =
-    app
+    app *> ZIO.succeed(runGraphQL)
 }
