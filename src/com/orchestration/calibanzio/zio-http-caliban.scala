@@ -1,4 +1,4 @@
-package com.orchestration.caliban
+package com.orchestration.calibanzio
 
 import zio.*
 import zio.http.*

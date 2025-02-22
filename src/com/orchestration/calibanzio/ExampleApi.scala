@@ -1,11 +1,12 @@
-package com.orchestration
+package com.orchestration.calibanzio
 
-import com.orchestration.ExampleService
-import com.orchestration.Data
+import com.orchestration.calibanzio.ExampleService
+import com.orchestration.calibanzio.Data.*
 import caliban.* 
-import caliban.schema.Annotations.{GQLDeprecated, GQLDescription, GQLName}
+import caliban.*
 import caliban.schema.Schema
-import caliban.schema.ArgBuilder.auto._
+import caliban.schema.Schema.auto.*
+import caliban.schema.ArgBuilder.auto.*
 import caliban.schema.Schema.auto._
 import caliban.wrappers.ApolloTracing.apolloTracing
 import caliban.wrappers.DeferSupport
@@ -26,7 +27,7 @@ object ExampleApi {
 
   case class ConnectionArgs(by: ConnectedBy)
 
-  @GQLName("Character")
+  // @GQLName("Character")
   case class CharacterZIO(
     name: String,
     nicknames: UIO[List[UIO[String]]],
@@ -36,9 +37,9 @@ object ExampleApi {
   )
 
   case class Queries(
-    @GQLDescription("Return all characters from a given origin")
+    // @GQLDescription("Return all characters from a given origin")
     characters: CharactersArgs => UIO[List[CharacterZIO]],
-    @GQLDeprecated("Use `characters`")
+    // @GQLDeprecated("Use `characters`")
     character: CharacterArgs => UIO[Option[CharacterZIO]]
   )
   case class Mutations(deleteCharacter: CharacterArgs => UIO[Boolean])
