@@ -8,7 +8,6 @@ import caliban.schema.ArgBuilder.auto.*
 import caliban.quick.* // adds extension methods to `api`
 import zio.logging.consoleLogger
 
-
 case class User(id: Int, name: String, username: Int)
 case class Queries(
     users: Task[List[User]],
@@ -18,7 +17,9 @@ case class Queries(
 object SimpleZIO extends ZIOAppDefault {
 
   val resolver = Queries(
-    users = ZIO.succeed(List(User(1, "John", 1), User(2, "Jane", 2), User(2, "Esteban", 2))),
+    users = ZIO.succeed(
+      List(User(1, "John", 1), User(2, "Jane", 2), User(2, "Esteban", 2))
+    ),
     userByIf = (id: Int) => ZIO.succeed(Some(User(id, "Esteban", 1)))
   )
 

@@ -4,7 +4,6 @@ import zio.*
 import zio.logging.*
 import zio.http.*
 
-
 object ZioCalibanExample extends ZIOAppDefault {
   def run =
     for {
@@ -15,4 +14,3 @@ object ZioCalibanExample extends ZIOAppDefault {
       // _ <- httpFiber.join
     } yield ()
 }
-
