@@ -14,7 +14,7 @@ case class Queries(
     userByIf: Int => Task[Option[User]]
 )
 
-object SimpleZIO extends ZIOAppDefault {
+object SimpleGraphicalExample extends ZIOAppDefault {
 
   val resolver = Queries(
     users = ZIO.succeed(
