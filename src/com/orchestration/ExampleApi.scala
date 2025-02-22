@@ -1,8 +1,9 @@
-package example
+package com.orchestration
 
-import example.ExampleData._
-import caliban._
-import caliban.schema.Annotations.{ GQLDeprecated, GQLDescription, GQLName }
+import com.orchestration.ExampleService
+import com.orchestration.Data
+import caliban.* 
+import caliban.schema.Annotations.{GQLDeprecated, GQLDescription, GQLName}
 import caliban.schema.Schema
 import caliban.schema.ArgBuilder.auto._
 import caliban.schema.Schema.auto._
