@@ -1,13 +1,16 @@
 package com.orchestration.calibanzio
 
 import com.orchestration.calibanzio.Client.*
+import com.orchestration.calibanzio.Client.Character.*
 import caliban.client.CalibanClientError
 import sttp.capabilities.WebSockets
 import sttp.capabilities.zio.ZioStreams
 import sttp.client3._
 import sttp.client3.httpclient.zio.HttpClientZioBackend
 import zio.Console.printLine
-import zio._
+import zio.*
+
+
 
 object ExampleApp extends ZIOAppDefault {
 
@@ -23,16 +26,17 @@ object ExampleApp extends ZIOAppDefault {
 
   def run = {
     val character = {
-      import example.client.Client.Character._
+      // import example.client.Client.Character._
+      // import org.orchestration.calibanzio.Client.Character.*
       (name ~
         nicknames ~
         origin ~
         role(
-          Captain.shipName.map(Role.Captain),
-          Engineer.shipName.map(Role.Engineer),
-          Mechanic.shipName.map(Role.Mechanic),
-          Pilot.shipName.map(Role.Pilot)
-        )).mapN(Character)
+          Captain.shipName.map(Role.Captain.apply),
+          Engineer.shipName.map(Role.Engineer.apply),
+          Mechanic.shipName.map(Role.Mechanic.apply),
+          Pilot.shipName.map(Role.Pilot.apply)
+        )).mapN(Character.apply)
     }
     val query     =
       Queries.characters(None) {
@@ -51,9 +55,9 @@ object ExampleApp extends ZIOAppDefault {
 
     def sendRequest[T](
       req: Request[Either[CalibanClientError, T], Any]
-    ): RIO[SttpBackend[Task, ZioStreams with WebSockets], T] =
+    ): RIO[SttpBackend[Task, ZioStreams & WebSockets], T] =
       ZIO
-        .serviceWithZIO[SttpBackend[Task, ZioStreams with WebSockets]](req.send(_))
+        .serviceWithZIO[SttpBackend[Task, ZioStreams & WebSockets]](req.send(_))
         .map(_.body)
         .absolve
         .tap(res => printLine(s"Result: $res"))

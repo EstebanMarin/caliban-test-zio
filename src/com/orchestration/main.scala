@@ -6,3 +6,4 @@ object HelloWorld extends ZIOAppDefault {
   def run =
     Console.printLine("Hello, World!")
 }
+
