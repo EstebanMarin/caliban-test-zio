@@ -9,8 +9,7 @@ import sttp.client3._
 import sttp.client3.httpclient.zio.HttpClientZioBackend
 import zio.Console.printLine
 import zio.*
-
-
+import izumi.reflect.Tag
 
 object ExampleApp extends ZIOAppDefault {
 
@@ -23,6 +22,8 @@ object ExampleApp extends ZIOAppDefault {
   }
 
   case class Character(name: String, nicknames: List[String], origin: Origin, role: Option[Role])
+
+  implicit val sttpBackendTag: Tag[SttpBackend[Task, ZioStreams & WebSockets]] = Tag[SttpBackend[Task, ZioStreams & WebSockets]]
 
   def run = {
     val character = {
@@ -53,7 +54,7 @@ object ExampleApp extends ZIOAppDefault {
         }
     val mutation  = Mutations.deleteCharacter("James Holden")
 
-    def sendRequest[T](
+    def sendRequest[T: Tag](
       req: Request[Either[CalibanClientError, T], Any]
     ): RIO[SttpBackend[Task, ZioStreams & WebSockets], T] =
       ZIO
