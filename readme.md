@@ -5,3 +5,15 @@ to grow under the organization
 ```sh
   zio-http-caliban git:(main) ✗ scala-cli run . --interactive 
 ```
+
+```sh
+  zio-http-caliban git:(main) ✗ scala-cli compile .
+```
+
+```sh
+  zio-http-caliban git:(main) ✗ scala-cli test .
+```
+
+```sh
+  zio-http-caliban git:(main) ✗ scala-cli repl <import file>
+```
