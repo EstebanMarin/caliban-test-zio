@@ -54,6 +54,8 @@ object FederatedApi {
       )
     implicit lazy val episodeSchema: Schema[CharacterService, Episode] = gen
     implicit val characterArgsSchema: Schema[Any, CharacterArgs]       = Schema.gen
+    implicit val charactersURIOListSchema: Schema[CharacterService, URIO[CharacterService, List[Character]]] =
+      ???
     implicit val charactersArgsSchema: Schema[Any, CharactersArgs]     = Schema.gen
     implicit val episodeArgs: Schema[Any, EpisodeArgs]                 = Schema.gen
     implicit val episodeArgBuilder: ArgBuilder[EpisodeArgs]            = ArgBuilder.gen
