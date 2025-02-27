@@ -46,13 +46,13 @@ object ExampleApi {
   case class Mutations(deleteCharacter: CharacterArgs => UIO[Boolean])
   case class Subscriptions(characterDeleted: ZStream[Any, Nothing, String])
 
-  implicit val originSchema: Schema[Any, Origin] = Schema.gen
-  implicit val connectedBySchema: Schema[Any, ConnectedBy] = Schema.gen
-  implicit val roleSchema: Schema[Any, Role] = Schema.gen
-  implicit val characterArgsSchema: Schema[Any, CharacterArgs] = Schema.gen
-  implicit val charactersArgsSchema: Schema[Any, CharactersArgs] = Schema.gen
-  implicit lazy val characterZIOSchema: Schema[Any, CharacterZIO] = Schema.gen
-  implicit val queriesSchema: Schema[Any, Queries] = Schema.gen
+  given Schema[Any, Origin] = Schema.gen
+  given Schema[Any, ConnectedBy] = Schema.gen
+  given Schema[Any, Role] = Schema.gen
+  given Schema[Any, CharacterArgs] = Schema.gen
+  given Schema[Any, CharactersArgs] = Schema.gen
+  given Schema[Any, CharacterZIO] = Schema.gen
+  given Schema[Any, Queries] = Schema.gen
 
   def makeApi(exampleService: ExampleService): GraphQL[Any] = {
     def character2CharacterZIO(ch: Character): CharacterZIO =

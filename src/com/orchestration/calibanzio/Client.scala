@@ -1,13 +1,13 @@
 package com.orchestration.calibanzio
 
 import caliban.client.CalibanClientError.DecodingError
-import caliban.client.FieldBuilder._
-import caliban.client.Operations._
-import caliban.client.SelectionBuilder._
-import caliban.client.__Value._
+import caliban.client.FieldBuilder.*
+import caliban.client.Operations.*
+import caliban.client.SelectionBuilder.*
+import caliban.client.__Value.*
 import caliban.client.{ArgEncoder, Argument, ScalarDecoder, SelectionBuilder}
 
-object Client {
+object Client:
 
   sealed trait Origin extends scala.Product with scala.Serializable
   object Origin {
@@ -15,17 +15,17 @@ object Client {
     case object EARTH extends Origin
     case object MARS extends Origin
 
-    implicit val decoder: ScalarDecoder[Origin] = {
+    given ScalarDecoder[Origin] = 
       case __StringValue("BELT")  => Right(Origin.BELT)
       case __StringValue("EARTH") => Right(Origin.EARTH)
       case __StringValue("MARS")  => Right(Origin.MARS)
       case other => Left(DecodingError(s"Can't build Origin from input $other"))
-    }
-    implicit val encoder: ArgEncoder[Origin] = {
+    
+    given ArgEncoder[Origin] = 
       case Origin.BELT  => __EnumValue("BELT")
       case Origin.EARTH => __EnumValue("EARTH")
       case Origin.MARS  => __EnumValue("MARS")
-    }
+    
   }
 
   type Engineer
@@ -111,5 +111,3 @@ object Client {
         arguments = List(Argument("name", name, "String!"))
       )
   }
-
-}
