@@ -9,9 +9,9 @@ object FederationData {
   object episodes {
     @GQLKey("season episode")
     case class Episode(
-      name: String,
-      season: Int,
-      episode: Int
+        name: String,
+        season: Int,
+        episode: Int
     )
 
     @GQLKey("name")
@@ -33,15 +33,15 @@ object FederationData {
 
     object Origin {
       case object EARTH extends Origin
-      case object MARS  extends Origin
-      case object BELT  extends Origin
+      case object MARS extends Origin
+      case object BELT extends Origin
     }
 
     sealed trait Role
 
     object Role {
-      case class Captain(shipName: String)  extends Role
-      case class Pilot(shipName: String)    extends Role
+      case class Captain(shipName: String) extends Role
+      case class Pilot(shipName: String) extends Role
       case class Engineer(shipName: String) extends Role
       case class Mechanic(shipName: String) extends Role
     }
@@ -51,22 +51,26 @@ object FederationData {
 
     @GQLKey("name")
     case class Character(
-      name: String,
-      nicknames: List[String],
-      origin: Origin,
-      role: Option[Role],
-      starredIn: List[Episode] = Nil
+        name: String,
+        nicknames: List[String],
+        origin: Origin,
+        role: Option[Role],
+        starredIn: List[Episode] = Nil
     )
 
     @GQLKey("season episode")
     @GQLExtend
     case class Episode(
-      @GQLExternal season: Int,
-      @GQLExternal episode: Int,
-      characters: ZQuery[CharacterService, Nothing, List[Character]] = ZQuery.succeed(List.empty)
+        @GQLExternal season: Int,
+        @GQLExternal episode: Int,
+        characters: ZQuery[CharacterService, Nothing, List[Character]] =
+          ZQuery.succeed(List.empty)
     )
 
-    def queryCharacters(season: Int, episode: Int): ZQuery[CharacterService, Nothing, List[Character]] =
+    def queryCharacters(
+        season: Int,
+        episode: Int
+    ): ZQuery[CharacterService, Nothing, List[Character]] =
       ZQuery.fromZIO(CharacterService.getCharactersByEpisode(season, episode))
 
     case class CharactersArgs(origin: Option[Origin])
@@ -96,11 +100,41 @@ object FederationData {
           Some(Mechanic("Rocinante")),
           List(Episode(1, 1), Episode(1, 2), Episode(2, 1))
         ),
-        Character("Alex Kamal", Nil, MARS, Some(Pilot("Rocinante")), List(Episode(1, 1), Episode(1, 2), Episode(2, 1))),
-        Character("Chrisjen Avasarala", Nil, EARTH, None, List(Episode(1, 1), Episode(1, 2), Episode(2, 1))),
-        Character("Josephus Miller", List("Joe"), BELT, None, List(Episode(1, 1), Episode(1, 2), Episode(2, 1))),
-        Character("Roberta Draper", List("Bobbie", "Gunny"), MARS, None, List(Episode(2, 1)))
-      ).map(c => c.copy(starredIn = c.starredIn.map(e => e.copy(characters = queryCharacters(e.season, e.episode)))))
+        Character(
+          "Alex Kamal",
+          Nil,
+          MARS,
+          Some(Pilot("Rocinante")),
+          List(Episode(1, 1), Episode(1, 2), Episode(2, 1))
+        ),
+        Character(
+          "Chrisjen Avasarala",
+          Nil,
+          EARTH,
+          None,
+          List(Episode(1, 1), Episode(1, 2), Episode(2, 1))
+        ),
+        Character(
+          "Josephus Miller",
+          List("Joe"),
+          BELT,
+          None,
+          List(Episode(1, 1), Episode(1, 2), Episode(2, 1))
+        ),
+        Character(
+          "Roberta Draper",
+          List("Bobbie", "Gunny"),
+          MARS,
+          None,
+          List(Episode(2, 1))
+        )
+      ).map(c =>
+        c.copy(starredIn =
+          c.starredIn.map(e =>
+            e.copy(characters = queryCharacters(e.season, e.episode))
+          )
+        )
+      )
   }
 
 }
