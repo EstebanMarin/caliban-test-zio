@@ -93,7 +93,7 @@ object FederatedApi {
       )
 
     val api: GraphQL[CharacterService] =
-      graphQL(
+      graphQL[CharacterService, Queries, Mutations, Unit](
         RootResolver(
           Queries(
             args => CharacterService.getCharacters(args.origin),
@@ -126,7 +126,7 @@ object FederatedApi {
     implicit val episodeSchema: Schema[Any, Episode] = Schema.gen
 
     val api: GraphQL[EpisodeService] =
-      graphQL(
+      graphQL[EpisodeService, Queries, Unit, Unit](
         RootResolver(
           Queries(
             args => EpisodeService.getEpisode(args.season, args.episode),
