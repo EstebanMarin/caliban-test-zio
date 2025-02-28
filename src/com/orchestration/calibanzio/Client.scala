@@ -15,17 +15,17 @@ object Client:
     case object EARTH extends Origin
     case object MARS extends Origin
 
-    given ScalarDecoder[Origin] = 
+    given ScalarDecoder[Origin] =
       case __StringValue("BELT")  => Right(Origin.BELT)
       case __StringValue("EARTH") => Right(Origin.EARTH)
       case __StringValue("MARS")  => Right(Origin.MARS)
       case other => Left(DecodingError(s"Can't build Origin from input $other"))
-    
-    given ArgEncoder[Origin] = 
+
+    given ArgEncoder[Origin] =
       case Origin.BELT  => __EnumValue("BELT")
       case Origin.EARTH => __EnumValue("EARTH")
       case Origin.MARS  => __EnumValue("MARS")
-    
+
   }
 
   type Engineer
