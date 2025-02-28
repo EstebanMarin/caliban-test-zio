@@ -28,9 +28,6 @@ object ExampleApp extends ZIOAppDefault {
       role: Option[Role]
   )
 
-  implicit val sttpBackendTag: Tag[SttpBackend[Task, ZioStreams & WebSockets]] =
-    Tag[SttpBackend[Task, ZioStreams & WebSockets]]
-
   def run = {
     val character = {
       // import example.client.Client.Character._
