@@ -17,3 +17,7 @@ to grow under the organization
 ```sh
   zio-http-caliban git:(main) ✗ scala-cli repl <import file>
 ```
+
+```sh
+scala-cli compile src/com/orchestration/scalamacros/SimpleInlines.scala
+```

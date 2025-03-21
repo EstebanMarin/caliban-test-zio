@@ -62,7 +62,7 @@ object ExampleApp extends ZIOAppDefault {
     ): RIO[SttpBackend[Task, ZioStreams & WebSockets], T] =
       ZIO
         // .serviceWithZIO[SttpBackend[Task, ZioStreams & WebSockets]](req.send(_))
-        // see fix here 
+        // see fix here
         // https://discord.com/channels/629491597070827530/633200096393166868/1344476469304234036
         .serviceWithZIO[SttpBackend[Task, Any]](req.send(_))
         .map(_.body)
